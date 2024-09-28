@@ -4,14 +4,19 @@ import { useState, MouseEventHandler } from 'react';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import Logo from "@/components/logo";
+import { usePathname } from 'next/navigation'
 
 const Navbar: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
+  const pathname = usePathname(); // Get the current route
 
   // Explicitly type toggleMenu as MouseEventHandler
   const toggleMenu: MouseEventHandler<HTMLButtonElement> = () => {
     setIsMenuOpen(!isMenuOpen);
   };
+
+  // Function to check if a link is active
+  const isActive = (path: string) => pathname === path;
 
   return (
     <nav className="w-full py-4 px-8 bg-white dark:bg-darkBg border-b-4 border-black shadow-[5px_5px_0px_#000000] flex justify-between items-center">
@@ -50,7 +55,9 @@ const Navbar: React.FC = () => {
           <li>
             <Link
               href="/adopt"
-              className="px-4 py-2 hover:bg-black hover:text-white border-2 border-black dark:border-white transition-all shadow-[3px_3px_0px_#000000] dark:shadow-[3px_3px_0px_#ffffff]"
+              className={`px-4 py-2 hover:bg-black hover:text-white border-2 border-black dark:border-white transition-all shadow-[3px_3px_0px_#000000] dark:shadow-[3px_3px_0px_#ffffff] ${
+                isActive('/adopt') ? 'bg-black text-white dark:bg-white dark:text-black' : ''
+              }`}
               onClick={() => setIsMenuOpen(false)} // Close menu on click
             >
               Adopt a Pet
@@ -59,7 +66,9 @@ const Navbar: React.FC = () => {
           <li>
             <Link
               href="/vets"
-              className="px-4 py-2 hover:bg-black hover:text-white border-2 border-black dark:border-white transition-all shadow-[3px_3px_0px_#000000] dark:shadow-[3px_3px_0px_#ffffff]"
+              className={`px-4 py-2 hover:bg-black hover:text-white border-2 border-black dark:border-white transition-all shadow-[3px_3px_0px_#000000] dark:shadow-[3px_3px_0px_#ffffff] ${
+                isActive('/vets') ? 'bg-black text-white dark:bg-white dark:text-black' : ''
+              }`}
               onClick={() => setIsMenuOpen(false)}
             >
               Vets Near You
@@ -68,7 +77,9 @@ const Navbar: React.FC = () => {
           <li>
             <Link
               href="/community"
-              className="px-4 py-2 hover:bg-black hover:text-white border-2 border-black dark:border-white transition-all shadow-[3px_3px_0px_#000000] dark:shadow-[3px_3px_0px_#ffffff]"
+              className={`px-4 py-2 hover:bg-black hover:text-white border-2 border-black dark:border-white transition-all shadow-[3px_3px_0px_#000000] dark:shadow-[3px_3px_0px_#ffffff] ${
+                isActive('/community') ? 'bg-black text-white dark:bg-white dark:text-black' : ''
+              }`}
               onClick={() => setIsMenuOpen(false)}
             >
               Community
@@ -77,7 +88,9 @@ const Navbar: React.FC = () => {
           <li>
             <Link
               href="/about"
-              className="px-4 py-2 hover:bg-black hover:text-white border-2 border-black dark:border-white transition-all shadow-[3px_3px_0px_#000000] dark:shadow-[3px_3px_0px_#ffffff]"
+              className={`px-4 py-2 hover:bg-black hover:text-white border-2 border-black dark:border-white transition-all shadow-[3px_3px_0px_#000000] dark:shadow-[3px_3px_0px_#ffffff] ${
+                isActive('/about') ? 'bg-black text-white dark:bg-white dark:text-black' : ''
+              }`}
               onClick={() => setIsMenuOpen(false)}
             >
               About Us
