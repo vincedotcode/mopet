@@ -1,8 +1,7 @@
-import Community from '@/sections/community'
-import Features from '@/sections/features'
-import Header from '@/sections/header'
-import Faq from '@/sections/faq'
-import Pricing from '@/sections/pricing'
+import Community from '@/components/landing/community'
+import Features from '@/components/landing/features'
+import Header from '@/components/landing/header'
+import Faq from '@/components/landing/faq'
 import Footer from '@/components/footer'
 import Navbar from '@/components/navbar'
 export default function Home() {
@@ -12,8 +11,7 @@ export default function Home() {
       <Header />
       <Features />
       <Community />
-      <Faq />
-      <Pricing />
+     
       <Footer />
     </>
   )
