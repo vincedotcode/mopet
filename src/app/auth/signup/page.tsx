@@ -26,15 +26,22 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useToast } from "@/hooks/use-toast";
 import { LoadingButton } from "@/components/ui/loading-button";
+import { createUser } from "@/lib/actions/user.actions"; 
 
-// Define the form validation schema using Zod
+
 const signupFormSchema = z
   .object({
     firstName: z.string().nonempty({ message: "First name is required" }),
     lastName: z.string().nonempty({ message: "Last name is required" }),
-    email: z.string().nonempty({ message: "Email is required" }).email({ message: "Invalid email" }),
-    password: z.string().min(6, { message: "Password must be at least 6 characters long" }),
+    email: z
+      .string()
+      .nonempty({ message: "Email is required" })
+      .email({ message: "Invalid email" }),
+    password: z
+      .string()
+      .min(6, { message: "Password must be at least 6 characters long" }),
     confirmPassword: z.string(),
+    userBio: z.string().optional(),
   })
   .refine((data) => data.password === data.confirmPassword, {
     message: "Passwords don't match",
@@ -47,6 +54,7 @@ export default function Signup() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const { toast } = useToast();
+  const [imageFile, setImageFile] = useState<File | null>(null);
 
   const form = useForm<SignupFormValues>({
     resolver: zodResolver(signupFormSchema),
@@ -56,20 +64,29 @@ export default function Signup() {
       email: "",
       password: "",
       confirmPassword: "",
+      userBio: "",
     },
   });
 
-  const onSubmit: SubmitHandler<SignupFormValues> = async ({ firstName, lastName, email, password }) => {
+
+
+
+  const onSubmit: SubmitHandler<SignupFormValues> = async (data) => {
     setLoading(true);
     try {
-      // Simulate API call for signup
+      const newUser = {
+        ...data,
+      };
+
+      await createUser(newUser); 
+
       toast({
         title: "Success!",
         description: "Account created successfully!",
         variant: "default",
       });
 
-      router.push("/login"); // Redirect to login after signup
+      router.push("/auth/signin"); 
     } catch (error: unknown) {
       toast({
         title: "Error",
@@ -78,6 +95,7 @@ export default function Signup() {
       });
     } finally {
       form.reset();
+      setImageFile(null);
       setLoading(false);
     }
   };
@@ -92,7 +110,7 @@ export default function Signup() {
             </Button>
           </Link>
         </div>
-        <Card className="mx-auto max-w-lg"> {/* Increased width */}
+        <Card className="mx-auto max-w-lg">
           <CardHeader>
             <CardTitle className="text-2xl">Sign Up</CardTitle>
             <CardDescription>
@@ -102,7 +120,6 @@ export default function Signup() {
           <CardContent>
             <Form {...form}>
               <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-                {/* First Name and Last Name in a Grid */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <FormField
                     control={form.control}
@@ -180,6 +197,23 @@ export default function Signup() {
                     </FormItem>
                   )}
                 />
+
+                {/* Bio */}
+                <FormField
+                  control={form.control}
+                  name="userBio"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Bio</FormLabel>
+                      <FormControl>
+                        <Input {...field} placeholder="Tell us about yourself" />
+                      </FormControl>
+                    </FormItem>
+                  )}
+                />
+
+       
+
                 <div className="flex justify-center">
                   <LoadingButton type="submit" variant="neutral" className="w-full" loading={loading}>
                     Sign Up

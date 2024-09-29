@@ -1,20 +1,19 @@
 "use client";
 
-import Link from "next/link"
-import { ChevronLeft } from 'lucide-react';
-import { Button } from "@/components/ui/button"
+import Link from "next/link";
+import { ChevronLeft } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
+} from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -24,13 +23,12 @@ import { useForm, SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useState } from "react";
-import { useRouter } from 'next/navigation'
-// import { login } from "@/services/auth";
+import { useRouter } from "next/navigation";
 import { useToast } from "@/hooks/use-toast";
-import { LoadingButton } from '@/components/ui/loading-button';
+import { LoadingButton } from "@/components/ui/loading-button";
+import { signIn } from "next-auth/react";
 
-
-// Define the form validation schema using Zod
+// Validation schema using Zod
 const loginFormSchema = z.object({
   email: z.string().nonempty({ message: "email is required" }),
   password: z.string().min(6, { message: "Password must be at least 6 characters long" }),
@@ -38,16 +36,11 @@ const loginFormSchema = z.object({
 
 type LoginFormValues = z.infer<typeof loginFormSchema>;
 
-
-
 export default function Login() {
-
-
-  const router = useRouter()
+  const router = useRouter();
   const [loginError, setLoginError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
-  const { toast } = useToast()
-
+  const { toast } = useToast();
 
   const form = useForm<LoginFormValues>({
     resolver: zodResolver(loginFormSchema),
@@ -59,56 +52,57 @@ export default function Login() {
 
   const onSubmit: SubmitHandler<LoginFormValues> = async ({ email, password }) => {
     setLoading(true);
+    setLoginError(null);  // Reset the error state
+
     try {
-      // const response = await login({ email, password });
+      const result = await signIn("credentials", {
+        redirect: false,
+        email, 
+        password,
+      });
+     
+
+      if (!result) {
+        throw new Error("Login failed");
+      }
+
       toast({
         title: "Success!",
         description: "Account logged in successfully!",
         variant: "default",
       });
-  
-      router.push('/');
+
+      router.push("/");  // Redirect to the homepage after successful login
     } catch (error: unknown) {
       if (error instanceof Error) {
-        try {
-          const errorDetails = JSON.parse(error.message);
-          const message = Array.isArray(errorDetails.message) ? errorDetails.message.join(", ") : errorDetails.message;
-          toast({
-            title: "Error",
-            description: message || 'Failed to create an account',
-            variant: "destructive",
-          });
-        } catch (jsonError) {
-          toast({
-            title: "Error",
-            description: 'Failed to create login',
-            variant: "destructive",
-          });
-        }
-      } else {
+        setLoginError(error.message);
         toast({
           title: "Error",
-          description: 'An unexpected error occurred',
+          description: error.message || "Failed to login",
+          variant: "destructive",
+        });
+      } else {
+        setLoginError("An unexpected error occurred.");
+        toast({
+          title: "Error",
+          description: "An unexpected error occurred.",
           variant: "destructive",
         });
       }
     } finally {
-      form.reset();
       setLoading(false);
     }
   };
 
-
   return (
-    <div className=" h-screen">
-      <div className="flex items-center justify-center flex-col ">
+    <div className="h-screen">
+      <div className="flex items-center justify-center flex-col">
         <div className="self-start mb-16 mt-3 flex justify-between w-full">
           <Link href="/">
             <Button className="mx-3">
               <ChevronLeft className="mr-2 h-4 w-4" /> Back to Home
             </Button>
           </Link>
-        
         </div>
         <Card className="mx-auto max-w-sm">
           <CardHeader>
@@ -152,11 +146,13 @@ export default function Login() {
                 />
                 {loginError && (
                   <FormItem>
-                    <FormDescription className="text-red-500">{loginError}</FormDescription>
+                    <FormMessage className="text-red-500">{loginError}</FormMessage>
                   </FormItem>
                 )}
                 <div className="flex justify-center">
-                  <LoadingButton type="submit" variant="neutral" className="w-full" loading={loading}>Login</LoadingButton>
+                  <LoadingButton type="submit" variant="neutral" className="w-full" loading={loading}>
+                    Login
+                  </LoadingButton>
                 </div>
                 <div className="mt-4 text-center">
                   <Link href="/auth/forgot" className="text-sm underline">Forgot password?</Link>
@@ -170,6 +166,5 @@ export default function Login() {
         </Card>
       </div>
     </div>
-
-  )
+  );
 }

@@ -4,13 +4,18 @@ import { useState, MouseEventHandler } from 'react';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import Logo from "@/components/logo";
-import { usePathname } from 'next/navigation'
+import { usePathname } from 'next/navigation';
+import { useSession } from 'next-auth/react';
+import DropdownUser from "@/components/dropdown";  // Import DropdownUser component
 
 const Navbar: React.FC = () => {
     const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
     const pathname = usePathname(); // Get the current route
 
-    // Explicitly type toggleMenu as MouseEventHandler
+    // Get session data using useSession from next-auth
+    const { data: session, status } = useSession();
+    const user = session?.user;
+
     const toggleMenu: MouseEventHandler<HTMLButtonElement> = () => {
         setIsMenuOpen(!isMenuOpen);
     };
@@ -20,10 +25,9 @@ const Navbar: React.FC = () => {
 
     return (
         <nav className="w-full py-4 px-8 bg-white dark:bg-darkBg border-b-4 border-black shadow-[5px_5px_0px_#000000] flex justify-between items-center">
-            {/* Left side: Logo or Brand */}
-            <Logo />  {/* Replace with the Logo component */}
 
-            {/* Mobile Hamburger Icon */}
+            <Logo />
+
             <button
                 className="lg:hidden text-black dark:text-white focus:outline-none"
                 onClick={toggleMenu}
@@ -38,18 +42,6 @@ const Navbar: React.FC = () => {
                 className={`${isMenuOpen ? 'fixed inset-0 z-20 bg-white dark:bg-darkBg flex flex-col justify-center items-center' : 'hidden'
                     } lg:flex lg:space-x-6 lg:text-lg lg:font-semibold lg:text-black lg:dark:text-white lg:items-center lg:static lg:w-auto lg:h-auto`}
             >
-                {/* Close Button (Cross) */}
-                {isMenuOpen && (
-                    <button
-                        className="absolute top-6 right-6 text-black dark:text-white focus:outline-none"
-                        onClick={toggleMenu}
-                    >
-                        <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
-                        </svg>
-                    </button>
-                )}
-
                 <ul className="flex flex-col items-center space-y-8 text-lg font-semibold text-black dark:text-white lg:flex-row lg:space-x-6 lg:space-y-0">
                     <li>
                         <Link
@@ -95,28 +87,55 @@ const Navbar: React.FC = () => {
 
                 {/* Right side: Call to Action */}
                 <div className="flex flex-col space-y-4 mt-8 lg:hidden">
-                    <Button variant="default" size="lg" className="border-black dark:border-white shadow-[4px_4px_0px_#000000] dark:shadow-[4px_4px_0px_#ffffff]">
-                        Sign In
-                    </Button>
-                    <Button variant="noShadow" size="lg" className="border-black dark:border-white shadow-[4px_4px_0px_#000000] dark:shadow-[4px_4px_0px_#ffffff]">
-                        Sign Up
-                    </Button>
+                    {user ? (
+                        <div>
+                            <div className="text-center">
+                                <Button variant="default" size="lg" className="mt-4">
+                                    My Profile
+                                </Button>
+                            </div>
+                            <div className="text-center">
+                                <Button variant="default" size="lg" className="mt-4">
+                                    Sign Out
+                                </Button>
+                            </div>
+                        </div>
+
+                    ) : (
+                        <>
+                            <Link href="/auth/signin">
+                                <Button variant="default" size="lg" className="border-black dark:border-white shadow-[4px_4px_0px_#000000] dark:shadow-[4px_4px_0px_#ffffff]">
+                                    Sign In
+                                </Button>
+                            </Link>
+                            <Link href="/auth/signup">
+                                <Button variant="noShadow" size="lg" className="border-black dark:border-white shadow-[4px_4px_0px_#000000] dark:shadow-[4px_4px_0px_#ffffff]">
+                                    Sign Up
+                                </Button>
+                            </Link>
+                        </>
+                    )}
                 </div>
             </div>
 
             {/* Desktop right side buttons */}
             <div className="hidden lg:flex space-x-4">
-                <Link href="/auth/signin">
-                    <Button variant="default" size="lg" className="border-black dark:border-white shadow-[4px_4px_0px_#000000] dark:shadow-[4px_4px_0px_#ffffff]">
-                        Sign In
-                    </Button>
-                </Link>
-
-                <Link href="/auth/signup">
-                    <Button variant="default" size="lg" className="border-black dark:border-white shadow-[4px_4px_0px_#000000] dark:shadow-[4px_4px_0px_#ffffff]">
-                        Sign Up
-                    </Button>
-                </Link>
+                {user ? (
+                    <DropdownUser />
+                ) : (
+                    <>
+                        <Link href="/auth/signin">
+                            <Button variant="default" size="lg" className="border-black dark:border-white shadow-[4px_4px_0px_#000000] dark:shadow-[4px_4px_0px_#ffffff]">
+                                Sign In
+                            </Button>
+                        </Link>
+                        <Link href="/auth/signup">
+                            <Button variant="default" size="lg" className="border-black dark:border-white shadow-[4px_4px_0px_#000000] dark:shadow-[4px_4px_0px_#ffffff]">
+                                Sign Up
+                            </Button>
+                        </Link>
+                    </>
+                )}
             </div>
         </nav>
     );
