@@ -2,7 +2,7 @@
 import { useUser } from "@/context/user-context";
 import { signOut } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { ChevronDown, LogOut, Settings, User2 } from "lucide-react";
+import { ChevronDown, LogOut, Settings, User2, Shield } from "lucide-react";
 import Link from "next/link";
 import {
   DropdownMenu,
@@ -44,6 +44,17 @@ const DropdownUser = () => {
             My Profile
           </Link>
         </DropdownMenuItem>
+        {user.isAdmin && (
+          <DropdownMenuItem asChild>
+            <Link
+              href="/admin"
+              className="flex items-center gap-3.5 text-sm font-bold hover:text-primary focus:text-primary"
+            >
+              <Shield className="mr-2 h-4 w-4" />
+              Admin
+            </Link>
+          </DropdownMenuItem>
+        )}
         <DropdownMenuSeparator className="border-t-4 border-primary" />
         <DropdownMenuItem
           onClick={handleLogout}

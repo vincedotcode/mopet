@@ -5,36 +5,37 @@ import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import Logo from "@/components/logo";
 import { usePathname } from 'next/navigation';
-import { useSession } from 'next-auth/react';
-import DropdownUser from "@/components/dropdown";  // Import DropdownUser component
+import { Shield, MenuIcon, X } from 'lucide-react';
+import { useUser } from "@/context/user-context";
+import DropdownUser from '@/components/dropdown';
+
+
 
 const Navbar: React.FC = () => {
     const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
-    const pathname = usePathname(); // Get the current route
-
-    // Get session data using useSession from next-auth
-    const { data: session, status } = useSession();
-    const user = session?.user;
+    const pathname = usePathname();
+    const user = useUser();
 
     const toggleMenu: MouseEventHandler<HTMLButtonElement> = () => {
         setIsMenuOpen(!isMenuOpen);
     };
 
-    // Function to check if a link is active
     const isActive = (path: string) => pathname === path;
 
     return (
-        <nav className="w-full py-4 px-8 bg-white dark:bg-darkBg border-b-4 border-black shadow-[5px_5px_0px_#000000] flex justify-between items-center">
-
-            <Logo />
+        <nav className="w-full py-4 px-8 bg-white dark:bg-darkBg border-b-4 border-black shadow-[5px_5px_0px_#000000] flex justify-between items-center relative z-30">
+            {/* Ensuring Logo and Menu Button stay above the mobile menu */}
+            <Logo className="relative z-50" />
 
             <button
-                className="lg:hidden text-black dark:text-white focus:outline-none"
+                className="lg:hidden text-black dark:text-white focus:outline-none relative z-50"
                 onClick={toggleMenu}
             >
-                <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d={isMenuOpen ? "M6 18L18 6M6 6l12 12" : "M4 6h16M4 12h16m-7 6h7"}></path>
-                </svg>
+                {isMenuOpen ? (
+                    <X className="w-8 h-8" />
+                ) : (
+                    <MenuIcon className="w-8 h-8" />
+                )}
             </button>
 
             {/* Full Page Mobile Menu */}
@@ -94,6 +95,16 @@ const Navbar: React.FC = () => {
                                     My Profile
                                 </Button>
                             </div>
+                            {user.isAdmin && (
+                                <Link
+                                    href="/admin"
+                                >
+                                    <Button size="lg" className="mt-4">
+                                        <Shield className="mr-2 h-4 w-4" />
+                                        Admin
+                                    </Button>
+                                </Link>
+                            )}
                             <div className="text-center">
                                 <Button variant="default" size="lg" className="mt-4">
                                     Sign Out
