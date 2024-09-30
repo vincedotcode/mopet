@@ -1,29 +1,79 @@
-"use client";
+'use client';
 
-import { useState } from 'react'
-import { Button } from "@/components/ui/button"
-import { Card, CardContent } from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { PawPrint, Search } from "lucide-react"
-
+import { useState, useEffect } from 'react';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { PawPrint, Search, Undo } from 'lucide-react';
+import Link from 'next/link';
+import { getAllPets } from '@/lib/actions/pet.actions'; // Import the getAllPets function
+import { mauritiusLocations } from '@/lib/utils';
+import AddAdoption from '@/components/adopt/add-adopt';
 export default function AdoptPetSection() {
-  const [selectedType, setSelectedType] = useState("")
-  const [selectedAge, setSelectedAge] = useState("")
+  const [selectedType, setSelectedType] = useState('');
+  const [selectedAge, setSelectedAge] = useState('');
+  const [location, setLocation] = useState('');
+  const [pets, setPets] = useState<Pet[]>([]); // Use the Pet type here
+  const [filteredPets, setFilteredPets] = useState<Pet[]>([]); // For filtered results
+  const [noData, setNoData] = useState(false); // For no results message
+  const [visiblePets, setVisiblePets] = useState(12); // Number of pets visible at a time
 
-  const pets = [
-    { id: 1, name: "Buddy", type: "Dog", age: "Young", image: "/placeholder.svg?height=200&width=200" },
-    { id: 2, name: "Whiskers", type: "Cat", age: "Adult", image: "/placeholder.svg?height=200&width=200" },
-    { id: 3, name: "Hoppy", type: "Rabbit", age: "Young", image: "/placeholder.svg?height=200&width=200" },
-    { id: 4, name: "Goldie", type: "Fish", age: "Adult", image: "/placeholder.svg?height=200&width=200" },
-  ]
+  // Fetch pets when the component mounts
+  useEffect(() => {
+    const fetchPets = async () => {
+      try {
+        const petsData = await getAllPets();
+        setPets(petsData);
+        setFilteredPets(petsData); // Initialize filteredPets with all pets
+      } catch (error) {
+        console.error('Failed to fetch pets:', error);
+      }
+    };
+
+    fetchPets();
+  }, []);
+
+  const handleSearch = () => {
+    const filtered = pets.filter(pet => {
+      return (
+        (selectedType === '' || pet.species === selectedType) &&
+        (selectedAge === '' || pet.age === selectedAge) &&
+        (location === '' || pet.location.includes(location))
+      );
+    });
+
+    if (filtered.length === 0) {
+      setNoData(true);
+    } else {
+      setNoData(false);
+    }
+
+    setFilteredPets(filtered);
+    setVisiblePets(12); // Reset visible pets to 12 on each new search
+  };
+
+  const resetSearch = () => {
+    setSelectedType('');
+    setSelectedAge('');
+    setLocation('');
+    setFilteredPets(pets);
+    setNoData(false);
+    setVisiblePets(12); // Reset visible pets to 12
+  };
+
+  // Load more pets when "View More Pets" is clicked
+  const handleViewMore = () => {
+    setVisiblePets((prev) => prev + 12); // Increase visible pets by 12
+  };
 
   return (
     <section className="py-12 border-t-border border-t-2 px-4 bg-background dark:bg-darkBg">
       <div className="container mx-auto">
+        <AddAdoption />
         <h2 className="text-4xl font-bold mb-8 text-center text-foreground">Adopt a Pet</h2>
-        
+
         <div className="mb-8 p-6 bg-card dark:bg-darkCard border-4 border-border shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]">
           <h3 className="text-2xl font-bold mb-4 text-foreground">Find Your Perfect Companion</h3>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -56,35 +106,71 @@ export default function AdoptPetSection() {
             </div>
             <div>
               <Label htmlFor="location" className="text-lg font-bold text-foreground">Location</Label>
-              <Input id="location" placeholder="Enter zip code" className="border-2 border-border" />
+              <Select onValueChange={(value) => setLocation(value)}>
+                <SelectTrigger id="pet-location">
+                  <SelectValue placeholder="Select location" />
+                </SelectTrigger>
+                <SelectContent>
+                  {mauritiusLocations.map((location) => (
+                    <SelectItem key={location} value={location}>
+                      {location}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
           </div>
-          <Button className="mt-4 bg-primary hover:bg-primary-hover text-background font-bold py-2 px-4 border-2 border-border shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all hover:translate-x-[3px] hover:translate-y-[3px] hover:shadow-none">
+          <Button
+            onClick={handleSearch}
+            className="mt-4 bg-primary hover:bg-primary-hover text-background font-bold py-2 px-4 border-2 border-border shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all hover:translate-x-[3px] hover:translate-y-[3px] hover:shadow-none"
+          >
             <Search className="mr-2 h-4 w-4" /> Search Pets
           </Button>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {pets.map((pet) => (
-            <Card key={pet.id} className="border-4 border-border shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]">
-              <CardContent className="p-4">
-                <img src={pet.image} alt={pet.name} className="w-full h-48 object-cover mb-4 border-2 border-border" />
-                <h3 className="text-xl font-bold mb-2 text-foreground">{pet.name}</h3>
-                <p className="text-lg mb-2 text-foreground">{pet.type} • {pet.age}</p>
-                <Button className="w-full bg-secondary hover:bg-secondary-hover text-background font-bold py-2 px-4 border-2 border-border shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all hover:translate-x-[3px] hover:translate-y-[3px] hover:shadow-none">
-                  <PawPrint className="mr-2 h-4 w-4" /> Adopt Me
-                </Button>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
-
-        <div className="mt-8 text-center">
-          <Button className="bg-accent hover:bg-accent-hover text-background font-bold py-2 px-4 border-2 border-border shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] transition-all hover:translate-x-[3px] hover:translate-y-[3px] hover:shadow-none">
-            View More Pets
+          <Button
+            onClick={resetSearch} variant="default" className='py-2 mx-4' >
+            <Undo className="mr-2 h-4 w-4" /> Reset Search
           </Button>
         </div>
+
+        {noData ? (
+          <div className="p-6 mt-6 bg-card dark:bg-darkCard border-4 border-border shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] text-center">
+            <h2 className="text-3xl font-bold mb-4 text-foreground">No Pets Found</h2>
+            <p className="text-lg text-foreground">It looks like there are no pets available matching your search criteria. Please try again with different filters.</p>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6" id="pets">
+            {filteredPets.slice(0, visiblePets).map((pet) => (
+              <Card key={pet._id} className="border-4 border-border shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]">
+                <CardContent className="p-4">
+                  <img
+                    src={pet.images?.[0] || '/placeholder.svg?height=200&width=200'}
+                    alt={pet.name}
+                    className="w-full h-48 object-cover mb-4 border-2 border-border"
+                  />
+                  <h3 className="text-xl font-bold mb-2 text-foreground">{pet.name}</h3>
+                  <p className="text-lg mb-2 text-foreground">
+                    {pet.species} • {pet.age}
+                  </p>
+                  <Button className="w-full bg-secondary hover:bg-secondary-hover text-background font-bold py-2 px-4 border-2 border-border shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all hover:translate-x-[3px] hover:translate-y-[3px] hover:shadow-none">
+                    <PawPrint className="mr-2 h-4 w-4" /> Adopt Me
+                  </Button>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        )}
+
+        {!noData && filteredPets.length > visiblePets && (
+          <div className="mt-8 text-center">
+            <Button
+              onClick={handleViewMore}
+              className="bg-accent hover:bg-accent-hover text-background font-bold py-2 px-4 border-2 border-border shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] transition-all hover:translate-x-[3px] hover:translate-y-[3px] hover:shadow-none"
+            >
+              View More Pets
+            </Button>
+          </div>
+        )}
       </div>
     </section>
-  )
+  );
 }

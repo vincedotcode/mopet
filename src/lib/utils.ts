@@ -18,3 +18,26 @@ export const handleError = (error: unknown) => {
     throw new Error(`Unknown error: ${JSON.stringify(error)}`);
   }
 };
+
+export const mauritiusLocations = [
+  "Port Louis",
+  "Curepipe",
+  "Quatre Bornes",
+  "Vacoas",
+  "Rose Hill",
+  "Flic en Flac",
+  "Grand Baie",
+  "Pamplemousses",
+  "Mahébourg",
+  "Bel Air",
+  "Triolet",
+  "Goodlands",
+  "Moka",
+  "Rivière du Rempart",
+  "Beau Bassin",
+  "Plaine Magnien",
+  "Tamarin",
+  "Albion",
+  "Le Morne",
+  "Mont Choisy"
+];
