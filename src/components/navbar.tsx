@@ -8,13 +8,14 @@ import { usePathname } from 'next/navigation';
 import { Shield, MenuIcon, X } from 'lucide-react';
 import { useUser } from "@/context/user-context";
 import DropdownUser from '@/components/dropdown';
-
+import { useSession } from 'next-auth/react';
 
 
 const Navbar: React.FC = () => {
     const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
     const pathname = usePathname();
     const user = useUser();
+    const { data: session } = useSession(); // Get session data
 
     const toggleMenu: MouseEventHandler<HTMLButtonElement> = () => {
         setIsMenuOpen(!isMenuOpen);
@@ -88,7 +89,7 @@ const Navbar: React.FC = () => {
 
                 {/* Right side: Call to Action */}
                 <div className="flex flex-col space-y-4 mt-8 lg:hidden">
-                    {user ? (
+                    {user && session ? (
                         <div>
                             <div className="text-center">
                                 <Button variant="default" size="lg" className="mt-4">
@@ -131,7 +132,7 @@ const Navbar: React.FC = () => {
 
             {/* Desktop right side buttons */}
             <div className="hidden lg:flex space-x-4">
-                {user ? (
+                {user && session ? (
                     <DropdownUser />
                 ) : (
                     <>
