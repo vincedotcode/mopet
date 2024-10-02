@@ -8,9 +8,14 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { PawPrint, Search, Undo } from 'lucide-react';
 import Link from 'next/link';
-import { getAllPets } from '@/lib/actions/pet.actions'; // Import the getAllPets function
+import { getAllPets } from '@/lib/actions/pet.actions';
 import { mauritiusLocations } from '@/lib/utils';
 import AddAdoption from '@/components/adopt/add-adopt';
+import FullPageAdoptPetModal from '@/components/adopt/adopt-a-pet';
+
+
+
+
 export default function AdoptPetSection() {
   const [selectedType, setSelectedType] = useState('');
   const [selectedAge, setSelectedAge] = useState('');
@@ -19,6 +24,8 @@ export default function AdoptPetSection() {
   const [filteredPets, setFilteredPets] = useState<Pet[]>([]); // For filtered results
   const [noData, setNoData] = useState(false); // For no results message
   const [visiblePets, setVisiblePets] = useState(12); // Number of pets visible at a time
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedPet, setSelectedPet] = useState<Pet | null>(null); // Store the selected pet
 
   // Fetch pets when the component mounts
   useEffect(() => {
@@ -66,6 +73,11 @@ export default function AdoptPetSection() {
   // Load more pets when "View More Pets" is clicked
   const handleViewMore = () => {
     setVisiblePets((prev) => prev + 12); // Increase visible pets by 12
+  };
+
+  const handleOpenModal = (pet: Pet) => {
+    setSelectedPet(pet); // Store the selected pet
+    setIsModalOpen(true); // Open the modal
   };
 
   return (
@@ -151,7 +163,10 @@ export default function AdoptPetSection() {
                   <p className="text-lg mb-2 text-foreground">
                     {pet.species} • {pet.age}
                   </p>
-                  <Button className="w-full bg-secondary hover:bg-secondary-hover text-background font-bold py-2 px-4 border-2 border-border shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all hover:translate-x-[3px] hover:translate-y-[3px] hover:shadow-none">
+                  <Button
+                    className="w-full bg-secondary hover:bg-secondary-hover text-background font-bold py-2 px-4 border-2 border-border shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all hover:translate-x-[3px] hover:translate-y-[3px] hover:shadow-none"
+                    onClick={() => handleOpenModal(pet)} // Pass the current pet to the modal function
+                  >
                     <PawPrint className="mr-2 h-4 w-4" /> Adopt Me
                   </Button>
                 </CardContent>
@@ -171,6 +186,11 @@ export default function AdoptPetSection() {
           </div>
         )}
       </div>
+      <FullPageAdoptPetModal
+  pet={selectedPet} // Use `undefined` if selectedPet is null
+  isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+      />
     </section>
   );
 }

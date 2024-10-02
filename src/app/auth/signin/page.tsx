@@ -57,22 +57,35 @@ export default function Login() {
     try {
       const result = await signIn("credentials", {
         redirect: false,
-        email, 
+        email,
         password,
       });
-     
 
-      if (!result) {
-        throw new Error("Login failed");
+
+      if (result?.ok === false) {
+        setLoginError(result.error);
+        toast({
+          title: "Error",
+          description: result.error || "Failed to login",
+          variant: "destructive",
+        });
+      }
+      else {
+        toast({
+          title: "Success!",
+          description: "Account logged in successfully!",
+          variant: "default",
+        });
+
+        router.push("/");  // Redirect to the homepage after successful login
       }
 
-      toast({
-        title: "Success!",
-        description: "Account logged in successfully!",
-        variant: "default",
-      });
 
-      router.push("/");  // Redirect to the homepage after successful login
+
+
+
+
+
     } catch (error: unknown) {
       if (error instanceof Error) {
         setLoginError(error.message);

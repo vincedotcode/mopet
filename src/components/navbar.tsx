@@ -15,8 +15,9 @@ const Navbar: React.FC = () => {
     const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
     const pathname = usePathname();
     const user = useUser();
-    const { data: session } = useSession(); // Get session data
+    const { data: session } = useSession(); 
 
+    console.log('session:', session);
     const toggleMenu: MouseEventHandler<HTMLButtonElement> = () => {
         setIsMenuOpen(!isMenuOpen);
     };
