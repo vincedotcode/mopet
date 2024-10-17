@@ -165,7 +165,7 @@ export default function AdoptPetSection() {
                   </p>
                   <Button
                     className="w-full bg-secondary hover:bg-secondary-hover text-background font-bold py-2 px-4 border-2 border-border shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all hover:translate-x-[3px] hover:translate-y-[3px] hover:shadow-none"
-                    onClick={() => handleOpenModal(pet)} // Pass the current pet to the modal function
+                    onClick={() => handleOpenModal(pet)}
                   >
                     <PawPrint className="mr-2 h-4 w-4" /> Adopt Me
                   </Button>
@@ -187,8 +187,8 @@ export default function AdoptPetSection() {
         )}
       </div>
       <FullPageAdoptPetModal
-  pet={selectedPet} // Use `undefined` if selectedPet is null
-  isOpen={isModalOpen}
+        pet={selectedPet} 
+        isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
       />
     </section>

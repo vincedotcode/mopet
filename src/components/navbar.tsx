@@ -76,16 +76,7 @@ const Navbar: React.FC = () => {
                             Community
                         </Link>
                     </li>
-                    <li>
-                        <Link
-                            href="/about"
-                            className={`px-4 py-2 hover:bg-black hover:text-white border-2 border-black dark:border-white transition-all shadow-[3px_3px_0px_#000000] dark:shadow-[3px_3px_0px_#ffffff] ${isActive('/about') ? 'bg-black text-white dark:bg-white dark:text-black' : ''
-                                }`}
-                            onClick={() => setIsMenuOpen(false)}
-                        >
-                            About Us
-                        </Link>
-                    </li>
+                   
                 </ul>
 
                 {/* Right side: Call to Action */}

@@ -1,60 +1,66 @@
-import { Heart, PawPrint, Users, Calendar, MessageCircle, Shield } from "lucide-react"
+import { Heart, PawPrint, Users, Calendar, MessageCircle, Smartphone, DollarSign, MapPin } from "lucide-react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 
 export default function Component() {
   const features = [
     {
       icon: Heart,
-      title: "Compassionate Care",
-      description: "Provide loving attention and support for pets in need."
+      title: "Pet Adoption",
+      description: "Help pets find their forever homes with our easy adoption process."
     },
     {
-      icon: PawPrint,
-      title: "Pet Matching",
-      description: "Find the perfect companion based on lifestyle and preferences."
+      icon: DollarSign,
+      title: "Donation Campaigns",
+      description: "Support causes that matter to you and help pets in need through our donation platform."
+    },
+    {
+      icon: MapPin,
+      title: "Find a Vet",
+      description: "Locate the nearest and best veterinarians for your pet's health and well-being."
     },
     {
       icon: Users,
-      title: "Community Support",
-      description: "Connect with other pet lovers and share experiences."
+      title: "Community Forum",
+      description: "Connect with fellow pet lovers, share experiences, and seek advice."
     },
     {
-      icon: Calendar,
-      title: "Care Reminders",
-      description: "Never miss important pet care tasks with timely alerts."
+      icon: Smartphone,
+      title: "Friendly Interface",
+      description: "Enjoy a user-friendly experience that makes navigating the platform a breeze."
     },
     {
-      icon: MessageCircle,
-      title: "Expert Advice",
-      description: "Access to veterinarians and pet behavior specialists."
-    },
-    {
-      icon: Shield,
-      title: "Pet Insurance",
-      description: "Protect your furry friends with comprehensive coverage."
+      icon: Heart,
+      title: "Non-Profit",
+      description: "We are dedicated to making a difference, with all proceeds going towards helping animals."
     }
-  ]
+  ];
+  
 
   return (
-    <section className="border-t-border dark:border-t-darkBorder dark:bg-darkBg border-t-2 bg-bg py-20 font-base lg:py-[100px]">
-      <div className="container mx-auto px-4">
-        <h2 className="text-3xl font-bold text-center mb-12 text-foreground">Our Features</h2>
+    <section className="border-t-border dark:border-t-darkBorder dark:bg-darkBg border-t-4 bg-bg py-20 font-base lg:py-[100px] relative overflow-hidden">
+      <div className="absolute inset-0 bg-[linear-gradient(to_right,#00000011_1px,transparent_1px),linear-gradient(to_bottom,#00000011_1px,transparent_1px)] bg-[size:44px_44px] dark:bg-[linear-gradient(to_right,#ffffff11_1px,transparent_1px),linear-gradient(to_bottom,#ffffff11_1px,transparent_1px)]" />
+      <div className="container mx-auto px-4 relative z-10">
+        <h2 className="text-4xl font-heading text-center mb-12 text-text dark:text-darkText relative inline-block left-1/2 transform -translate-x-1/2">
+          Our Features
+          <span className="absolute -bottom-2 left-0 w-full h-4 bg-main -z-10 -rotate-2" />
+        </h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {features.map((feature, index) => (
-            <Card key={index} className="transition-transform duration-300 hover:scale-105">
+            <Card key={index} className="transition-all duration-300 hover:-translate-y-2 hover:translate-x-2 bg-bg dark:bg-darkBg border-4 border-text dark:border-darkText rounded-none shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] dark:shadow-[4px_4px_0px_0px_rgba(238,239,233,1)]">
               <CardHeader>
-                <div className="flex items-center justify-center w-12 h-12 bg-primary rounded-full mb-4">
-                  <feature.icon className="w-6 h-6 text-primary-foreground" />
+                <div className="flex items-center justify-center w-16 h-16 bg-main rounded-full mb-4 border-4 border-text dark:border-darkText transform -rotate-3">
+                  <feature.icon className="w-8 h-8 text-text dark:text-darkText" />
                 </div>
-                <CardTitle className="text-xl">{feature.title}</CardTitle>
+                <CardTitle className="text-2xl font-heading text-text dark:text-darkText">{feature.title}</CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-muted-foreground">{feature.description}</p>
+                <p className="text-text dark:text-darkText">{feature.description}</p>
               </CardContent>
             </Card>
           ))}
         </div>
       </div>
+      <div className="absolute bottom-0 left-0 w-full h-8 bg-main dark:bg-darkText transform -skew-y-2" />
     </section>
   )
 }
