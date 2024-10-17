@@ -1,7 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { PawPrint, Users, UserPlus } from "lucide-react";
 
-export default function DashboardTab({ vets }: { vets: Vet[] }) {
+export default function DashboardTab() {
   return (
     <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
       <Card>
@@ -40,7 +40,7 @@ export default function DashboardTab({ vets }: { vets: Vet[] }) {
           <UserPlus className="h-4 w-4 text-muted-foreground" />
         </CardHeader>
         <CardContent>
-          <div className="text-2xl font-bold">{vets?.length || 0}</div>
+          <div className="text-2xl font-bold">0</div>
           <p className="text-xs text-muted-foreground">+2 new this month</p>
         </CardContent>
       </Card>
