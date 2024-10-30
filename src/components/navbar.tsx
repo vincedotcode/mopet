@@ -17,7 +17,6 @@ const Navbar: React.FC = () => {
     const user = useUser();
     const { data: session } = useSession(); 
 
-    console.log('session:', session);
     const toggleMenu: MouseEventHandler<HTMLButtonElement> = () => {
         setIsMenuOpen(!isMenuOpen);
     };
@@ -74,6 +73,16 @@ const Navbar: React.FC = () => {
                             onClick={() => setIsMenuOpen(false)}
                         >
                             Community
+                        </Link>
+                    </li>
+                    <li>
+                        <Link
+                            href="/donations"
+                            className={`px-4 py-2 hover:bg-black hover:text-white border-2 border-black dark:border-white transition-all shadow-[3px_3px_0px_#000000] dark:shadow-[3px_3px_0px_#ffffff] ${isActive('/donations') ? 'bg-black text-white dark:bg-white dark:text-black' : ''
+                                }`}
+                            onClick={() => setIsMenuOpen(false)}
+                        >
+                            Make A Donation
                         </Link>
                     </li>
                    

@@ -9,6 +9,7 @@ import DashboardTab from "@/components/admin/admin-dashboard";
 import UsersTab from "@/components/admin/admin-users";
 import VetsTab from "@/components/admin/admin-vets";
 import CommunityTab from "@/components/admin/admin-community";
+import DonationsTab from "@/components/admin/admin-donations"; // Import the new DonationsTab
 
 export default function AdminDashboard() {
   const router = useRouter();
@@ -32,6 +33,7 @@ export default function AdminDashboard() {
             <TabsTrigger value="users">Users</TabsTrigger>
             <TabsTrigger value="vets">Vets</TabsTrigger>
             <TabsTrigger value="community">Community</TabsTrigger>
+            <TabsTrigger value="donations">Donations</TabsTrigger> {/* New Donations Tab */}
           </TabsList>
 
           <TabsContent value="dashboard">
@@ -48,6 +50,10 @@ export default function AdminDashboard() {
 
           <TabsContent value="community">
             <CommunityTab />
+          </TabsContent>
+
+          <TabsContent value="donations">
+            <DonationsTab /> 
           </TabsContent>
         </Tabs>
       </main>

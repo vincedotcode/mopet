@@ -167,3 +167,15 @@ export async function getUserByEmail(email: string) {
     handleError(error);
   }
 }
+
+export async function getAllUsers(): Promise<IUser[]> {
+  try {
+    await connectToDatabase();
+
+    const users = await User.find({});
+    return JSON.parse(JSON.stringify(users));
+  } catch (error) {
+    handleError(error);
+    throw new Error("An error occurred while fetching users");
+  }
+}

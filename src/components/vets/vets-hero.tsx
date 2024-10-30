@@ -12,7 +12,7 @@ export default function VetHeroSection() {
   }
 
   return (
-    <header className="relative min-h-[60vh] w-full bg-orange-400 dark:bg-darkBg overflow-hidden transition-colors duration-300">
+    <header className="relative min-h-[40vh] w-full bg-bg dark:bg-darkBg overflow-hidden transition-colors duration-300">
       <div className="absolute inset-0 bg-[linear-gradient(to_right,#00000022_2px,transparent_2px),linear-gradient(to_bottom,#00000022_2px,transparent_2px)] dark:bg-[linear-gradient(to_right,#ffffff22_2px,transparent_2px),linear-gradient(to_bottom,#ffffff22_2px,transparent_2px)] bg-[size:40px_40px]" />
       
       <div className="relative z-10 container mx-auto px-4 py-12 flex flex-col md:flex-row items-center justify-between">

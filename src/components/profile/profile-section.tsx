@@ -28,18 +28,13 @@ export default function ProfilePage() {
   const fetchUserData = async () => {
     try {
       setLoading(true);
-      const adoptions = await getAllAdoptions();
+      const adoptions = await getAdoptionByAdopterId(user?.id);
       setAdoptionsData(adoptions);
 
       const pets = await getPetsByUserId(user.id);
       setPetsForAdoptionData(pets);
 
-      const requests = {};
-      for (let pet of pets) {
-        const petRequests = await getAdoptionByAdopterId(pet._id);
-        requests[pet._id] = petRequests;
-      }
-      setAdoptionRequests(requests);
+     
     } catch (error) {
       console.error("Error fetching data:", error);
     } finally {
