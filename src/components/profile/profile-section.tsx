@@ -7,16 +7,16 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import AdoptionsTab from "@/components/profile/profile-adoption";
 import PetsForAdoptionTab from "@/components/profile/profile-pet-for-adoption";
 import DonationsTab from "@/components/profile/profile-donation";
-import { getAllAdoptions, getAdoptionByAdopterId } from "@/lib/actions/adoption.action";
+import { getAdoptionByAdopterId, getAllAdoptions } from "@/lib/actions/adoption.action";
 import { getPetsByUserId } from "@/lib/actions/pet.actions";
 import { useUser } from "@/context/user-context";
 
 export default function ProfilePage() {
   const user = useUser(); // Assuming this gives us the logged-in user
   const [openModal, setOpenModal] = useState<string | null>(null);
-  const [adoptionsData, setAdoptionsData] = useState([]);
-  const [petsForAdoptionData, setPetsForAdoptionData] = useState([]);
-  const [adoptionRequests, setAdoptionRequests] = useState({});
+  const [adoptionsData, setAdoptionsData] = useState<Adoption[]>([]);
+  const [petsForAdoptionData, setPetsForAdoptionData] = useState<Pet[]>([]);
+  const [adoptionRequests, setAdoptionRequests] = useState<Adoption[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -34,7 +34,15 @@ export default function ProfilePage() {
       const pets = await getPetsByUserId(user.id);
       setPetsForAdoptionData(pets);
 
-     
+      const allAdoptions = await getAllAdoptions();
+
+      const petIds = pets.map((pet: Pet) => pet._id);
+      const filteredAdoptionRequests = allAdoptions.filter(
+        (adoption: Adoption) => petIds.includes(adoption.pet._id)
+      );
+
+      setAdoptionRequests(filteredAdoptionRequests);
+
     } catch (error) {
       console.error("Error fetching data:", error);
     } finally {
@@ -75,7 +83,12 @@ export default function ProfilePage() {
         </TabsContent>
 
         <TabsContent value="petsForAdoption">
-          <PetsForAdoptionTab petsForAdoptionData={petsForAdoptionData} adoptionRequests={adoptionRequests} openModal={openModal} setOpenModal={setOpenModal} />
+          <PetsForAdoptionTab
+            petsForAdoptionData={petsForAdoptionData}
+            adoptionRequests={adoptionRequests}
+            openModal={openModal}
+            setOpenModal={setOpenModal}
+          />
         </TabsContent>
 
         <TabsContent value="donations">

@@ -77,7 +77,7 @@ export async function getAdoptionByListerId(listerId: string) {
     await connectToDatabase();
     const adoptions = await Adoption.find().populate({
       path: "pet",
-      match: { listedBy: listerId }, // Filter pets by lister ID
+      match: { listedBy: listerId },
     }).populate("adopter");
 
     const filteredAdoptions = adoptions.filter((adoption) => adoption.pet !== null); // Remove any null pets

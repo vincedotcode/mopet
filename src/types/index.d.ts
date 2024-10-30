@@ -225,3 +225,52 @@ declare type SendMessageParams = {
   userId: string; // ID of the user sending the message
   content: string; // Content of the message
 };
+
+declare type Adoption = {
+  contactInfo: {
+    email: string;
+    phoneNumber: string;
+    address: string;
+  };
+  _id: string;
+  adopter: {
+    _id: string;
+    email: string;
+    firstName: string;
+    lastName: string;
+    password: string;
+    isEmailVerified: boolean;
+    userBio: string;
+    role: string;
+    isAdmin: boolean;
+    createdAt: string;
+    updatedAt: string;
+    __v: number;
+  };
+  pet: {
+    _id: string;
+    name: string;
+    age: string;
+    species: string;
+    breed: string;
+    gender: string;
+    description: string;
+    images: string[];
+    adoptionStatus: string;
+    listedBy: string;
+    isNeutered: boolean;
+    isVaccinated: boolean;
+    location: string;
+    createdAt: string;
+    updatedAt: string;
+    __v: number;
+  };
+  listedBy: string;
+  status: string;
+  adoptionReason: string;
+  review: string;
+  adoptionDate: string;
+  createdAt: string;
+  updatedAt: string;
+  __v: number;
+};
