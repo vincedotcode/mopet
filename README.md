@@ -1,89 +1,91 @@
-<img src="public/preview.png" />
+# MoPet 🐾
 
-# Mopet: SaaS Landing Page Template
+**A pet adoption and donation platform — list animals for adoption, run donation campaigns, and find a vet nearby.**
 
-Mopet is a modern, **neobrutalism-styled** [Next.js](https://nextjs.org/) + [Tailwind CSS](https://tailwindcss.com/) template designed for SaaS product landing pages. It provides an opinionated starting point with pre‑built sections—such as hero, features, testimonials and pricing—so you can launch a polished marketing site quickly.
+[**Live**](https://mopet.vercel.app)
+---
 
-## ✨ Features
+## What it does
 
-- **Beautiful neo‑brutalist design** with responsive layouts and ready‑made section components.
-- Built with **Next.js App Router** and **TypeScript** for type‑safety and performance.
-- **Tailwind CSS** configured for rapid styling and dark‑mode support.
-- Preconfigured for **pnpm** with ESLint, Prettier and Husky for consistent code style.
-- Modular folder structure so you can add or remove sections as needed.
+**Adoption listings** — Shelters and owners post animals with photos, details and adoption status. Browse and filter to find a match.
 
-## 📸 Live Preview
+**Donation campaigns** — Fundraising campaigns with Stripe checkout, tracked against a target.
 
-A live preview of the default template is available at (add a deployed link here). The `/public/preview.png` image in this repository gives a quick visual overview.
+**Vet finder** — Nearby veterinary services plotted on an interactive Leaflet map.
 
-## 🚀 Getting Started
+**Community forum** — Pet owners share experiences and ask for advice.
 
-This repository is a template. To create your own project from it, click **Use this template** on GitHub or run the GitHub CLI:
+**Accounts** — Authentication via NextAuth, with bcrypt-hashed credentials.
 
-```bash
-gh repo create my-saas-site --template vincedotcode/mopet
-```
+**Email** — Transactional mail through Resend.
 
-### Prerequisites
+---
 
-Ensure you have Node.js (v18 or later) and [pnpm](https://pnpm.io/) installed globally:
+## Stack
 
-```bash
-npm install -g pnpm
-```
+A single Next.js application — the API routes and the frontend live in the same project, with MongoDB accessed directly through Mongoose.
 
-### Installation
+**Framework** — Next.js 14 (App Router), TypeScript
 
-Clone your newly created repository and install dependencies:
+**Styling** — Tailwind CSS, shadcn/ui on Radix primitives, `react-fast-marquee`
 
-```bash
-pnpm install
-```
+**Data** — MongoDB via Mongoose, `@faker-js/faker` for seeding
 
-To start the development server:
+**Auth** — NextAuth + bcrypt
 
-```bash
-pnpm run dev
-```
+**Payments** — Stripe (`stripe` + `@stripe/react-stripe-js`)
 
-Navigate to `http://localhost:3000` to view the site.
+**Maps** — Leaflet + React Leaflet
 
-### Building for Production
+**Email** — Resend
 
-To generate a production build:
+**Forms & validation** — React Hook Form + Zod
+
+**Charts** — Recharts
+
+---
+
+## Running locally
+
+**Prerequisites:** Node.js 18+, a MongoDB database, and Stripe + Resend keys.
 
 ```bash
-pnpm run build
-pnpm start
+git clone https://github.com/vincedotcode/mopet.git
+cd mopet
+npm install
 ```
 
-### Configuration
+Create `.env.local`:
 
-This template intentionally keeps its configuration simple. To customise the content and metadata:
+```bash
+MONGODB_URI=
+NEXTAUTH_SECRET=
+NEXTAUTH_URL=http://localhost:3000
+STRIPE_SECRET_KEY=
+NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=
+RESEND_API_KEY=
+```
 
-- Edit `/app/layout.tsx` to update `<head>` tags and site metadata.
-- Replace `/public/favicon.ico` and `/public/preview.png` with your own assets.
-- Update `/app/page.tsx` to change sections, copy and calls to action.
-- Each section in `components/sections` can be modified or removed to fit your needs.
+Then:
 
-For custom styling, open `tailwind.config.ts` and adjust colours, fonts or breakpoints. You can also copy styles from the [Neo‑brutalism Components styling docs](https://neobrutalism-components.vercel.app/docs/styling) into this file.
+```bash
+npm run dev
+```
 
-## 👋 Contributing
+Open `http://localhost:3000`.
 
-Contributions, issues and feature requests are welcome! If you'd like to add new sections or improve the design:
+---
 
-1. Fork this repo.
-2. Create your feature branch: `git checkout -b my-feature`.
-3. Commit your changes: `git commit -am 'Add my feature'`.
-4. Push to the branch: `git push origin my-feature`.
-5. Create a pull request.
+## Housekeeping
 
-Please ensure any code you submit follows the linting rules (run `pnpm run lint` before submitting) and adds/updates relevant tests.
+The `name` field in `package.json` is still `nextjs-starter-template` — a leftover from scaffolding. Worth changing to `mopet`.
 
-## 📰 License
+---
 
-This project is open-source and distributed under the **MIT License**. See the [LICENSE](LICENSE) file for details.
+## License
 
-## 📧 Contact
+MIT — see [LICENSE](LICENSE).
 
-If you encounter bugs or have questions, please open an issue. Feel free to reach out on (your preferred contact method) for support or to discuss improvements.
+## Contact
+
+Vince Erkadoo — [vincedotcode.com](https://vincedotcode.com) · [vince@vincedotcode.com](mailto:vince@vincedotcode.com)
